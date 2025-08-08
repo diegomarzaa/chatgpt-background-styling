@@ -35,8 +35,8 @@ Customize the background of chatgpt.com with image, blur, and gradient. Configur
 ### Workflow
 
 ```bash
-git clone <repository>
-cd project
+git clone https://github.com/diegomarzaa/chatgpt-background-styling
+cd chatgpt-background-styling
 npm install
 ```
 

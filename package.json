@@ -1,9 +1,9 @@
 {
-  "name": "chatgpt-customizer-extension",
-  "displayName": "Chatgpt customizer extension",
-  "version": "0.0.1",
-  "description": "Personaliza el fondo de ChatGPT: imagen, blur, opacidades y degradado.",
-  "author": "Diego",
+  "name": "chatgpt-background-styling",
+  "displayName": "ChatGPT Background Styling",
+  "version": "1.0.2",
+  "description": "Customize the background of ChatGPT: image, blur, opacity, and gradient.",
+  "author": "Diego. diegomarzafuertes@gmail.com",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
