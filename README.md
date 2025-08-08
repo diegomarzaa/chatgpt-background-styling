@@ -1,8 +1,9 @@
 # ChatGPT Custom Background
 
-![alt text](assets/image.png)
+This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. You can fully customize it in real time, adjust the blur level, choose your own background image, and tweak the gradient to your liking. Built quickly without prior extension experience, simple to use and open for anyone to improve or expand.
 
-Customize the background of chatgpt.com with image, blur, and gradient. Configurable in real-time from the popup.
+![alt text](assets/demo.gif)
+
 
 ## Installation
 
@@ -14,19 +15,13 @@ Customize the background of chatgpt.com with image, blur, and gradient. Configur
    - Click **Load unpacked**
    - Select the unzipped folder
    - Activate the extension
-4. It will now work immediately on `chatgpt.com`.
-
-## Usage
-
-1. Open `https://chatgpt.com/`.
-2. Click on the extension icon.
-3. Adjust:
-	- **Enable** on/off
-	- **Image URL**
-	- **Image Opacity**
-	- **Blur (px)**
-	- **Gradient Opacity**
-4. Changes are applied **instantly** without reloading.
+4. It will now work immediately on `chatgpt.com`, configure it by clicking on the extension icon.
+   - **Enable** on/off
+   - **Image URL**
+     - The default image in the gpt-5 start page is the next one, just copy and paste it in the field:  https://persistent.oaistatic.com/burrito-nux/1920.webp
+   - **Image Opacity**
+   - **Blur (px)**
+   - **Gradient Opacity**
 
 ## For Developers
 
