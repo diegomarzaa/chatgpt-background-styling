@@ -1,10 +1,12 @@
 # ChatGPT Custom Background
 
+![alt text](assets/image.png)
+
 Customize the background of chatgpt.com with image, blur, and gradient. Configurable in real-time from the popup.
 
-## Instalation
+## Installation
 
-1. Download the production ZIP (`chrome-mv3-prod.zip`).
+1. Download the production ZIP (`chatgpt-background-styling.zip`).
 2. Unzip the file to a local folder.
 3. In your browser (Chrome, Brave, Edge):
    - Navigate to `chrome://extensions/`
@@ -56,7 +58,6 @@ Reload extension after changes to reflect updates.
 
 - Configuration stored in `chrome.storage` locally.
 - No data is sent to external servers.
-- If you publish in the Web Store, add a privacy policy and complete “Privacy practices”.
 
 ## Troubleshooting
 
