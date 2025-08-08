@@ -6,14 +6,15 @@ Customize the background of chatgpt.com with image, blur, and gradient. Configur
 
 ## Installation
 
-1. Download the production ZIP (`chatgpt-background-styling.zip`).
+1. Download the ZIP of the extension in [this link](https://github.com/diegomarzaa/chatgpt-background-styling/releases/latest).
 2. Unzip the file to a local folder.
 3. In your browser (Chrome, Brave, Edge):
    - Navigate to `chrome://extensions/`
    - Enable **Developer mode** (toggle in top-right)
    - Click **Load unpacked**
    - Select the unzipped folder
-4. The extension installs and works immediately on `chatgpt.com`. No development tools needed.
+   - Activate the extension
+4. It will now work immediately on `chatgpt.com`.
 
 ## Usage
 
