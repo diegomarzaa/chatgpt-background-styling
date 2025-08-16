@@ -1,15 +1,19 @@
 # ChatGPT Customizer Extension
 
-This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. You can fully customize it in real time, adjust the blur level, choose your own background image, and tweak the gradient to your liking. Built quickly without prior extension experience, simple to use and open for anyone to improve or expand.
+This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. 
+
+You can fully customize it in real time, adjust the blur level, choose your own background image, and tweak the gradient to your liking. 
 
 It also lets you enhance the ChatGPT experience with productivity features, like collapsible messages that clean up your chats.
+
+Built quickly without prior extension experience, making use of LLMs for the implementation, so expect possible bugs and mistakes. Open for anyone to improve or expand.
 
 ![alt text](assets/demo.gif)
 
 ## Features
 
 ### 🎨 **Background Customization**
-- **Custom Background Images** - Use any image URL or the original GPT-5 background
+- **Custom Background Images** - Use any image URL or the original GPT-5 background, link [here](https://persistent.oaistatic.com/burrito-nux/1920.webp)
 - **Real-time Opacity Control** - Adjust background transparency
 - **Dynamic Blur Effects** - Add blur for better text readability
 - **Gradient Overlays** - Customize gradient opacity for perfect balance
@@ -32,13 +36,6 @@ It also lets you enhance the ChatGPT experience with productivity features, like
 6. **Click** "Load unpacked"
 7. **Select** the extracted folder
 8. **Visit** [ChatGPT](https://chatgpt.com) and click the extension icon to configure
-
-### **Default Background Image**
-
-To use the original GPT-5 background, paste this URL:
-```
-https://persistent.oaistatic.com/burrito-nux/1920.webp
-```
 
 ## **For Developers**
 
