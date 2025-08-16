@@ -14,7 +14,7 @@ Built quickly without prior extension experience, making use of LLMs for the imp
 
 ## Installation
 
-1. **Download** the latest release from [GitHub Releases](https://github.com/diegomarzaa/chatgpt-customizer-extension/releases/latest)
+1. **Download** the latest release from [GitHub Releases](https://github.com/diegomarzaa/chatgpt-customizer-extension/releases/latest), downloading the folder "chatgpt-customizer.zip".
 2. **Extract** the ZIP file to a local folder
 3. **Open** your browser (Chrome, Brave, Edge, etc.)
 4. **Navigate** to `chrome://extensions/`
