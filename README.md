@@ -1,8 +1,10 @@
 # ChatGPT Customizer Extension
 
+Complete ChatGPT customization suite with visual background gallery, message management, and productivity features. Real-time configuration, keyboard shortcuts, and persistent state for an enhanced ChatGPT experience.
+
 This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. 
 
-You can fully customize it in real time, adjust the blur level, choose your own background image, and tweak the gradient to your liking. 
+You can fully customize it in real time, choose from 5 preset backgrounds or add your own, adjust blur level and gradients to your liking. 
 
 It also lets you enhance the ChatGPT experience with productivity features, like collapsible messages that clean up your chats.
 
@@ -13,7 +15,7 @@ Built quickly without prior extension experience, making use of LLMs for the imp
 ## Features
 
 ### 🎨 **Background Customization**
-- **Custom Background Images** - Use any image URL or the original GPT-5 background, link [here](https://persistent.oaistatic.com/burrito-nux/1920.webp)
+- **Custom Background Images** - Quickly select from 5 curated preset backgrounds or use any image URL (gifs are also allowed!).
 - **Real-time Opacity Control** - Adjust background transparency
 - **Dynamic Blur Effects** - Add blur for better text readability
 - **Gradient Overlays** - Customize gradient opacity for perfect balance
@@ -81,11 +83,15 @@ npm run build -- --zip
 
 ## 📝 **Changelog**
 
-### **v2.0.0** - *Major Feature Release*
+### **v2.1.0** - *Background Gallery Enhancement*
+- **Visual Background Gallery** - Beautiful grid layout with 5 preset backgrounds
+- **One-Click Background Selection** - Click any thumbnail to instantly apply
+- **Custom Background Library** - Add and save more than 50 custom URLs
+- **Easy Management** - Remove custom backgrounds with hover X button
+
+### **v2.0.0** - *Rebrand*
 - **Complete rebrand** from "ChatGPT Background Styling" to "ChatGPT Customizer"
-- **Collapsible Messages** - Click triangle buttons to collapse/expand any message
-- **Keyboard Shortcuts** - Alt+Shift+C for all messages
-- **Alt+Click Support** - Hold Alt and click any message to toggle (optional)
+- **Collapsible Messages** - Click triangle buttons to collapse/expand any message, or hold Alt and click the message to toggle (activate in settings). Hold Alt+Shift+C for toggling all messages.
 - **Persistent State** - Messages stay collapsed/expanded between sessions and reloads
 
 ### **v1.0.2** - *Initial Release*

@@ -1,7 +1,7 @@
 {
   "name": "chatgpt-customizer",
   "displayName": "ChatGPT Customizer",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Complete ChatGPT customization suite: backgrounds, collapsible messages, keyboard shortcuts, and visual enhancements.",
   "author": "Diego. diegomarzafuertes@gmail.com",
   "scripts": {
