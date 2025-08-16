@@ -2,9 +2,7 @@
 
 Complete ChatGPT customization suite with visual background gallery, message management, and productivity features. Real-time configuration, keyboard shortcuts, and persistent state for an enhanced ChatGPT experience.
 
-
 ![alt text](assets/demo-v2.gif)
-
 
 This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. 
 
@@ -14,6 +12,16 @@ It also lets you enhance the ChatGPT experience with productivity features, like
 
 Built quickly without prior extension experience, making use of LLMs for the implementation, so expect possible bugs and mistakes. Open for anyone to improve or expand.
 
+## Installation
+
+1. **Download** the latest release from [GitHub Releases](https://github.com/diegomarzaa/chatgpt-customizer-extension/releases/latest)
+2. **Extract** the ZIP file to a local folder
+3. **Open** your browser (Chrome, Brave, Edge, etc.)
+4. **Navigate** to `chrome://extensions/`
+5. **Enable** "Developer mode" (toggle in top-right corner)
+6. **Click** "Load unpacked"
+7. **Select** the extracted folder
+8. **Visit** [ChatGPT](https://chatgpt.com) and click the extension icon to configure
 
 ## Features
 
@@ -30,17 +38,6 @@ Built quickly without prior extension experience, making use of LLMs for the imp
 - **Persistent State** - Messages stay collapsed/expanded between sessions and chats.
 - **Variable size** - Adjust the size of collapsed messages.
 - **Customization** - Most of this options can be enabled or disabled in the options menu.
-
-## Installation
-
-1. **Download** the latest release from [GitHub Releases](https://github.com/diegomarzaa/chatgpt-customizer-extension/releases/latest)
-2. **Extract** the ZIP file to a local folder
-3. **Open** your browser (Chrome, Brave, Edge, etc.)
-4. **Navigate** to `chrome://extensions/`
-5. **Enable** "Developer mode" (toggle in top-right corner)
-6. **Click** "Load unpacked"
-7. **Select** the extracted folder
-8. **Visit** [ChatGPT](https://chatgpt.com) and click the extension icon to configure
 
 ## **For Developers**
 
