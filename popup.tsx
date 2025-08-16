@@ -1,11 +1,4 @@
-// src/popup.tsx
-// ============================================================================
-// Popup UI mejorado (visual, sin dependencias). Mantiene la misma lógica:
-// - Lee cfg desde el content script (GET_CFG)
-// - Envía parches en tiempo real (SET_CFG_PARTIAL)
-// - Controles: toggle, URL, sliders con valores en vivo
-// - Diseño: header con gradiente, tarjetas, sliders estilizados, inputs con iconos
-// ============================================================================
+// popup.tsx
 
 import React, { useEffect, useMemo, useState } from "react"
 
@@ -18,6 +11,11 @@ type Cfg = {
     mainImageOpacity: number
     blurAmount: number
     gradientOpacity: number
+    collapsibleMessages: boolean
+    buttonOpacity: number
+    collapsedHeight: string
+    altClickEnabled: boolean
+    persistMessageState: boolean
 }
 
 // ------------------------------
@@ -141,7 +139,7 @@ const Popup = () => {
             <header className="header">
                 <div className="title">
                     <IconToggle />
-                    <span>ChatGPT Custom Background</span>
+                    <span>ChatGPT Customizer</span>
                 </div>
                 <div className="actions">
                     <Switch checked={!!cfg.enabled} onChange={(v) => patch({ enabled: v })} />
@@ -178,7 +176,7 @@ const Popup = () => {
                     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
                         <path d="M12 3a2 2 0 0 1 2 2v1.1a7.02 7.02 0 0 1 2.05.85l.78-.78a2 2 0 1 1 2.83 2.83l-.78.78c.36.65.63 1.34.79 2.06H21a2 2 0 1 1 0 4h-1.1a7.02 7.02 0 0 1-.85 2.05l.78.78a2 2 0 1 1-2.83 2.83l-.78-.78c-.65.36-1.34.63-2.06.79V19a2 2 0 1 1-4 0v-1.1a7.02 7.02 0 0 1-2.05-.85l-.78.78a2 2 0 1 1-2.83-2.83l.78-.78A7 7 0 0 1 4.1 13H3a2 2 0 1 1 0-4h1.1a7.02 7.02 0 0 1 .85-2.05l-.78-.78a2 2 0 1 1 2.83-2.83l.78.78c.65-.36 1.34-.63 2.06-.79V5a2 2 0 0 1 2-2Z" />
                     </svg>
-                    <h4>Settings</h4>
+                    <h4>Visual Settings</h4>
                 </div>
 
                 <Field label={`Image opacity: ${Math.round(cfg.mainImageOpacity * 100)}%`}>
@@ -213,6 +211,76 @@ const Popup = () => {
                         readout={`${Math.round(cfg.gradientOpacity * 100)}%`}
                     />
                 </Field>
+            </section>
+
+            {/* Tarjeta: Mensajes Colapsables */}
+            <section className="card">
+                <div className="card-head">
+                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                    <h4>Collapsible Messages</h4>
+                </div>
+
+                <Field label="Enable collapsible messages">
+                    <Switch 
+                        checked={cfg.collapsibleMessages} 
+                        onChange={(v) => patch({ collapsibleMessages: v })} 
+                    />
+                </Field>
+
+                {cfg.collapsibleMessages && (
+                    <>
+                        <Field label={`Button opacity: ${Math.round(cfg.buttonOpacity * 100)}%`}>
+                            <Slider
+                                value={cfg.buttonOpacity}
+                                min={0}
+                                max={1}
+                                step={0.05}
+                                onChange={(v) => patch({ buttonOpacity: v })}
+                                readout={`${Math.round(cfg.buttonOpacity * 100)}%`}
+                            />
+                        </Field>
+
+                        <Field label="Collapsed height">
+                            <div className="input-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden>
+                                    <path d="M7 10l5 5 5-5z" />
+                                </svg>
+                                <input
+                                    placeholder="6.5em"
+                                    value={cfg.collapsedHeight}
+                                    onChange={(e) => patch({ collapsedHeight: e.target.value })}
+                                />
+                            </div>
+                        </Field>
+
+                        <Field label="Enable Alt+Click to toggle messages">
+                            <Switch 
+                                checked={cfg.altClickEnabled} 
+                                onChange={(v) => patch({ altClickEnabled: v })} 
+                            />
+                        </Field>
+
+                        <Field label="Remember collapsed state">
+                            <Switch 
+                                checked={cfg.persistMessageState} 
+                                onChange={(v) => patch({ persistMessageState: v })} 
+                            />
+                        </Field>
+
+                        <div className="info-box">
+                            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                            </svg>
+                            <span>
+                                <strong>Shortcuts:</strong> Alt+C (closest message), Alt+Shift+C (all messages)
+                                {cfg.altClickEnabled && <>, Alt+Click on any message</>}.
+                                {cfg.persistMessageState && <> State is remembered between sessions.</>}
+                            </span>
+                        </div>
+                    </>
+                )}
             </section>
 
             <footer className="footer">
@@ -360,6 +428,14 @@ body {
   padding: 10px 12px 12px; color:var(--muted); font-size:11.5px; text-align:center;
 }
 .error,.loading{padding:14px}
+
+.info-box{
+  display:flex; align-items:center; gap:8px; margin-top:10px;
+  padding:8px 10px; border-radius:8px; 
+  background:rgba(76, 158, 234, 0.08); border:1px solid rgba(76, 158, 234, 0.2);
+  font-size:12px; color:var(--muted);
+}
+.info-box svg{fill:rgba(76, 158, 234, 0.8)}
 `
 
 export default Popup

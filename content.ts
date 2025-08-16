@@ -1,12 +1,7 @@
-// src/contents/chatgpt-custom-bg.ts
-// ============================================================================
-// ChatGPT Custom Background (Plasmo content script)
-// - Fiel al Tampermonkey original: fondo <picture>, blur, opacidades, degradado
-// - Añade desenfoque a elementos sticky de la barra lateral (como el script base)
-// - Configurable en tiempo real desde el popup vía mensajería
-// ============================================================================
+// content.ts
 
 import { Storage } from "@plasmohq/storage"
+import { CollapsibleMessages, type CollapsibleConfig } from "./collapsible-messages"
 
 // ------------------------------
 // Configuración del content script (Plasmo)
@@ -25,6 +20,11 @@ type Cfg = {
   mainImageOpacity: number
   blurAmount: number
   gradientOpacity: number
+  collapsibleMessages: boolean
+  buttonOpacity: number
+  collapsedHeight: string
+  altClickEnabled: boolean
+  persistMessageState: boolean
 }
 
 const DEFAULT_CFG: Cfg = {
@@ -32,7 +32,12 @@ const DEFAULT_CFG: Cfg = {
   backgroundImageUrl: "https://persistent.oaistatic.com/burrito-nux/640.webp",
   mainImageOpacity: 0.5,
   blurAmount: 70,
-  gradientOpacity: 1.0
+  gradientOpacity: 1.0,
+  collapsibleMessages: true,
+  buttonOpacity: 0.4,
+  collapsedHeight: "6.5em",
+  altClickEnabled: false,
+  persistMessageState: false
 }
 
 // ------------------------------
@@ -40,6 +45,7 @@ const DEFAULT_CFG: Cfg = {
 // ------------------------------
 const storage = new Storage()
 let cfg: Cfg = DEFAULT_CFG
+let collapsibleMessages: CollapsibleMessages | null = null
 
 const readCfg = async (): Promise<Cfg> =>
   (await storage.get<Cfg>("chatgpt-custom-bg:cfg")) ?? DEFAULT_CFG
@@ -242,6 +248,8 @@ function applyBackground() {
 // Encendido/Apagado y persistencia
 // ------------------------------
 async function render() {
+  console.log('ChatGPT Customizer: Rendering with config', cfg)
+  
   if (cfg.enabled) {
     applyBackground()
   } else {
@@ -249,7 +257,39 @@ async function render() {
     pictureEl = imgEl = gradEl = null
     clearUIStyles()
   }
+  
+  // Configurar mensajes colapsables usando el módulo
+  setupCollapsibleMessages()
+  
   await writeCfg(cfg)
+}
+
+// ------------------------------
+// Setup de mensajes colapsables
+// ------------------------------
+function setupCollapsibleMessages() {
+  const collapsibleConfig: CollapsibleConfig = {
+    enabled: cfg.collapsibleMessages,
+    buttonOpacity: cfg.buttonOpacity,
+    collapsedHeight: cfg.collapsedHeight,
+    altClickEnabled: cfg.altClickEnabled,
+    persistMessageState: cfg.persistMessageState
+  }
+
+  if (!collapsibleMessages) {
+    console.log('ChatGPT Customizer: Creating new CollapsibleMessages instance')
+    collapsibleMessages = new CollapsibleMessages(collapsibleConfig)
+    // Llamar explícitamente a enable() en la primera creación
+    if (collapsibleConfig.enabled) {
+      setTimeout(() => {
+        console.log('ChatGPT Customizer: Force enabling collapsible messages')
+        collapsibleMessages?.enable()
+      }, 500)
+    }
+  } else {
+    console.log('ChatGPT Customizer: Updating existing CollapsibleMessages instance')
+    collapsibleMessages.updateConfig(collapsibleConfig)
+  }
 }
 
 // ------------------------------
@@ -277,9 +317,50 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 })
 
 // ------------------------------
-// Boot
+// Boot + Observador para mensajes nuevos
 // ------------------------------
 ;(async () => {
   cfg = await readCfg()
+  console.log('ChatGPT Customizer: Initial config loaded', cfg)
   await render()
+  
+  // Observador para nuevos mensajes
+  const observer = new MutationObserver((mutations) => {
+    if (cfg.collapsibleMessages && collapsibleMessages) {
+      let shouldUpdate = false
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node as Element
+              if (element.matches?.('div[data-message-id]') || 
+                  element.querySelector?.('div[data-message-id]')) {
+                shouldUpdate = true
+              }
+            }
+          })
+        }
+      })
+      
+      if (shouldUpdate) {
+        setTimeout(() => {
+          console.log('ChatGPT Customizer: Processing new messages via observer')
+          collapsibleMessages?.processNewMessages()
+        }, 100)
+      }
+    }
+  })
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  })
+  
+  // Ejecutar cada 10 segundos como fallback
+  setInterval(() => {
+    if (cfg.collapsibleMessages && collapsibleMessages) {
+      console.log('ChatGPT Customizer: Periodic check for new messages')
+      collapsibleMessages.processNewMessages()
+    }
+  }, 10000)
 })()
