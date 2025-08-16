@@ -16,6 +16,7 @@ type Cfg = {
     collapsedHeight: string
     altClickEnabled: boolean
     persistMessageState: boolean
+    savedBackgrounds: string[]
 }
 
 // ------------------------------
@@ -100,6 +101,16 @@ const Switch = ({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 const Popup = () => {
     const [cfg, setCfg] = useState<Cfg | null>(null)
     const [err, setErr] = useState<string | null>(null)
+    const [customUrl, setCustomUrl] = useState("")
+
+    // Fondos predeterminados
+    const defaultBackgrounds = [
+        "https://persistent.oaistatic.com/burrito-nux/1920.webp", // GPT HD
+        "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80", // Space
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80", // Mountain
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80", // Forest
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3kycXV3MzR4cDV2OXFuZjh0dmZlazRmdWgwOWJ6N3N2aHl3bDJ1YSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/VzH4jP7ppWF8dgCxcg/giphy.gif" // Dog Dance
+    ]
 
     // Cargar configuración actual desde la página activa
     useEffect(() => {
@@ -118,6 +129,43 @@ const Popup = () => {
         } catch {
             setErr("Could not communicate with the active tab.")
         }
+    }
+
+    // Funciones para manejar fondos
+    const addCustomBackground = async (url: string) => {
+        if (!cfg || !url.trim()) return
+        
+        const savedBackgrounds = cfg.savedBackgrounds || []
+        if (!savedBackgrounds.includes(url) && !defaultBackgrounds.includes(url)) {
+            const newSavedBackgrounds = [url, ...savedBackgrounds].slice(0, 50) // Máximo 50 fondos guardados
+            await patch({ savedBackgrounds: newSavedBackgrounds })
+        }
+    }
+
+    const selectBackground = async (url: string) => {
+        await patch({ backgroundImageUrl: url })
+        if (url && !defaultBackgrounds.includes(url)) {
+            await addCustomBackground(url)
+        }
+    }
+
+    const removeCustomBackground = async (url: string) => {
+        if (!cfg) return
+        const savedBackgrounds = (cfg.savedBackgrounds || []).filter(bg => bg !== url)
+        await patch({ savedBackgrounds })
+    }
+
+    const handleCustomUrlSubmit = async () => {
+        if (customUrl.trim()) {
+            await selectBackground(customUrl.trim())
+            setCustomUrl("")
+        }
+    }
+
+    // Obtener todos los fondos disponibles
+    const getAllBackgrounds = () => {
+        const saved = cfg?.savedBackgrounds || []
+        return [...defaultBackgrounds, ...saved]
     }
 
     // Previsualización pequeña del fondo (solo URL, sin leer de la página)
@@ -156,16 +204,75 @@ const Popup = () => {
                     <IconImage />
                     <h4>Background image</h4>
                 </div>
-                <Field label="URL">
-                    <div className="input-icon">
-                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden>
-                            <path d="M3.9 12a5 5 0 0 1 5-5h3v2h-3a3 3 0 0 0 0 6h3v2h-3a5 5 0 0 1-5-5Zm7.2 1h1.8v-2h-1.8v2Zm3-6h3a5 5 0 0 1 0 10h-3v-2h3a3 3 0 0 0 0-6h-3V7Z" />
-                        </svg>
-                        <input
-                            placeholder="https://…"
-                            value={cfg.backgroundImageUrl}
-                            onChange={(e) => patch({ backgroundImageUrl: e.target.value })}
-                        />
+                
+                {/* Galería de fondos predeterminados y guardados */}
+                <Field label="Quick Select">
+                    <div className="background-gallery">
+                        {getAllBackgrounds().map((url, index) => {
+                            const isSelected = cfg.backgroundImageUrl === url
+                            const isDefault = defaultBackgrounds.includes(url)
+                            const isCustom = !isDefault
+                            
+                            return (
+                                <div 
+                                    key={url}
+                                    className={`background-item ${isSelected ? 'selected' : ''}`}
+                                    onClick={() => selectBackground(url)}
+                                    style={{ backgroundImage: `url("${url}")` }}
+                                >
+                                    {isSelected && (
+                                        <div className="selected-indicator">✓</div>
+                                    )}
+                                    {isCustom && (
+                                        <button
+                                            className="remove-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                removeCustomBackground(url)
+                                            }}
+                                            title="Remove custom background"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
+                                    <div className="background-label">
+                                        {isDefault ? 
+                                            (index === 0 ? 'GPT' : 
+                                             index === 1 ? 'Space' :
+                                             index === 2 ? 'Mountain' : 
+                                             index === 3 ? 'Forest' : 
+                                             'Dog') :
+                                            'User'
+                                        }
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </Field>
+
+                {/* Input para URL personalizada */}
+                <Field label="Add Custom URL">
+                    <div className="custom-url-input">
+                        <div className="input-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden>
+                                <path d="M3.9 12a5 5 0 0 1 5-5h3v2h-3a3 3 0 0 0 0 6h3v2h-3a5 5 0 0 1-5-5Zm7.2 1h1.8v-2h-1.8v2Zm3-6h3a5 5 0 0 1 0 10h-3v-2h3a3 3 0 0 0 0-6h-3V7Z" />
+                            </svg>
+                            <input
+                                placeholder="https://example.com/image.jpg"
+                                value={customUrl}
+                                onChange={(e) => setCustomUrl(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleCustomUrlSubmit()}
+                            />
+                        </div>
+                        <button 
+                            className="add-btn"
+                            onClick={handleCustomUrlSubmit}
+                            disabled={!customUrl.trim()}
+                            title="Add and use this background"
+                        >
+                            Add
+                        </button>
                     </div>
                 </Field>
             </section>
@@ -288,7 +395,9 @@ const Popup = () => {
             </footer>
 
             {/* Estilos inline para mantener el archivo autocontenido */}
-            <style>{css}</style>
+            <style>
+                {css}
+            </style>
         </Shell>
     )
 }
@@ -317,6 +426,17 @@ const shellCss = `
   --border: #262a36;
   --ok: #22c55e;
 }
+
+/* ensure dark bg + no default body margin as early as possible */
+html, body {
+  background: var(--bg);
+  margin: 0;
+  color: var(--text);
+}
+
+/* hint the UA we're dark to avoid white UI flashes */
+:root { color-scheme: dark; }
+
 @media (prefers-color-scheme: light){
   :root{
     --bg: #f6f7fb;
@@ -335,7 +455,7 @@ const shellCss = `
   max-width: 360px;
   color: var(--text);
   background: var(--bg);
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
 }
 `
@@ -436,6 +556,106 @@ body {
   font-size:12px; color:var(--muted);
 }
 .info-box svg{fill:rgba(76, 158, 234, 0.8)}
+
+.background-gallery{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(80px, 1fr)); gap:8px; margin-top:6px;
+}
+.background-item{
+  position: relative;
+  aspect-ratio:16/9;
+  border-radius:6px;
+  cursor:pointer;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  border:2px solid transparent;
+  transition:all 0.2s ease;
+  overflow:hidden;
+  min-height:45px;
+
+  /* prevent the image from painting under the transparent border (avoids a thin line) */
+  background-clip: padding-box;
+}
+
+.background-item::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  /* adjust height to taste */
+  height:24px; /* e.g. clamp(50px, 40%, 80px) if tiles vary a lot */
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,0.6) 40%,
+    rgba(0,0,0,0.3) 70%,
+    rgba(0,0,0,0) 100%
+  );
+  pointer-events:none;
+  z-index:1;
+}
+
+
+.background-item:hover{
+  border-color:var(--accent); transform:scale(1.02);
+}
+.background-item.selected{
+  border-color:var(--accent-2); box-shadow:0 0 0 1px var(--accent-2);
+}
+
+.background-label{
+  position:absolute;
+  left:0; right:0; bottom:6px;
+  color:white;
+  font-size:10px;
+  text-align:center;
+  font-weight:500;
+  text-shadow:0 1px 2px rgba(0,0,0,0.8);
+
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+
+  padding:0 6px;
+  min-height:auto;
+  background:none;     /* ← gradient moved to ::after */
+  z-index:2;           /* above the overlay */
+}
+
+
+.selected-indicator{
+  position:absolute; top:4px; right:4px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--accent-2); color:white; font-size:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.3);
+}
+.remove-btn{
+  position:absolute; top:2px; left:2px;
+  width:16px; height:16px; border-radius:50%;
+  background:rgba(255,0,0,0.8); color:white; border:none;
+  font-size:10px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.2s ease;
+}
+.background-item:hover .remove-btn{opacity:1}
+.remove-btn:hover{background:rgba(255,0,0,1)}
+
+.custom-url-input{
+  display:flex; gap:8px; align-items:center;
+}
+.custom-url-input .input-icon{flex:1}
+.add-btn{
+  padding:6px 12px; border:1px solid var(--accent); border-radius:6px;
+  background:var(--accent); color:white; font-size:12px; cursor:pointer;
+  transition:all 0.2s ease; white-space:nowrap;
+}
+.add-btn:hover:not(:disabled){
+  background:var(--accent-2); border-color:var(--accent-2);
+}
+.add-btn:disabled{
+  opacity:0.5; cursor:not-allowed; background:var(--muted);
+  border-color:var(--muted);
+}
 `
 
 export default Popup

@@ -25,6 +25,7 @@ type Cfg = {
   collapsedHeight: string
   altClickEnabled: boolean
   persistMessageState: boolean
+  savedBackgrounds: string[]
 }
 
 const DEFAULT_CFG: Cfg = {
@@ -37,7 +38,8 @@ const DEFAULT_CFG: Cfg = {
   buttonOpacity: 0.4,
   collapsedHeight: "6.5em",
   altClickEnabled: false,
-  persistMessageState: false
+  persistMessageState: false,
+  savedBackgrounds: []
 }
 
 // ------------------------------
