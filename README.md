@@ -2,7 +2,7 @@
 
 Complete ChatGPT customization suite with visual background gallery, message management, and productivity features. Real-time configuration, keyboard shortcuts, and persistent state for an enhanced ChatGPT experience.
 
-![alt text](assets/demo-v2.gif)
+<img src="assets/demo-v2.gif" alt="ChatGPT Customizer Demo" width="100%" />
 
 This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. 
 
