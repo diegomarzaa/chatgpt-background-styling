@@ -2,6 +2,10 @@
 
 Complete ChatGPT customization suite with visual background gallery, message management, and productivity features. Real-time configuration, keyboard shortcuts, and persistent state for an enhanced ChatGPT experience.
 
+
+![alt text](assets/demo-v2.gif)
+
+
 This extension keeps the stylish GPT-5 landing page background visible even after you send a message, letting you enjoy the design while chatting. 
 
 You can fully customize it in real time, choose from 5 preset backgrounds or add your own, adjust blur level and gradients to your liking. 
@@ -10,7 +14,6 @@ It also lets you enhance the ChatGPT experience with productivity features, like
 
 Built quickly without prior extension experience, making use of LLMs for the implementation, so expect possible bugs and mistakes. Open for anyone to improve or expand.
 
-![alt text](assets/demo.gif)
 
 ## Features
 
